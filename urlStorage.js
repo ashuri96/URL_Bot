@@ -23,5 +23,5 @@ module.exports = {
 		return userUrlData.has(userId) ? userUrlData.get(userId) : {};
 	},
 
-	userUrlData,
+	userUrlData, // 他で共有したい場合
 };

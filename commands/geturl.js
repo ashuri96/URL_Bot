@@ -4,24 +4,18 @@ const urlStorage = require('../urlStorage');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('geturl')
-		.setDescription('指定したユーザーと保存済みのサイト名からURLを取得します')
-		.addUserOption(option =>
-			option.setName('target')
-				.setDescription('URLを確認したいユーザー')
-				.setRequired(true)
-		)
+		.setDescription('保存されたサイト名を選んでURLを表示します')
 		.addStringOption(option =>
 			option.setName('name')
 				.setDescription('保存されたサイト名を選んでください')
 				.setRequired(true)
-				.setAutocomplete(true) // 👈 補完対応
+				.setAutocomplete(true)
 		),
 
-	// 🔽 autocomplete（選択したユーザーの保存済みURL名を表示）
+	// 🔽 自分の保存した名前を候補表示
 	async autocomplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
-		const targetUser = interaction.options.getUser('target') ?? interaction.user;
-		const userID = targetUser.id;
+		const userID = interaction.user.id;
 
 		const allUrls = urlStorage.getAllUrls(userID);
 		const allNames = Object.keys(allUrls);
@@ -35,16 +29,15 @@ module.exports = {
 		);
 	},
 
-	// 🔽 実行処理（選んだ名前のURLを表示）
+	// 🔽 選んだ名前に対応するURLを表示
 	async execute(client, interaction) {
-		const targetUser = interaction.options.getUser('target');
 		const name = interaction.options.getString('name');
-		const userID = targetUser.id;
+		const userID = interaction.user.id;
 
 		if (!urlStorage.hasUrl(userID, name)) {
 			await interaction.reply({
-				content: `❌ ユーザー <@${userID}> は「${name}」という名前のURLを登録していません。`,
-				ephemeral: false,
+				content: `❌ あなたは「${name}」という名前のURLを登録していません。`,
+				ephemeral: true,
 			});
 			return;
 		}
@@ -52,7 +45,7 @@ module.exports = {
 		const url = urlStorage.getUrl(userID, name);
 
 		await interaction.reply({
-			content: `🔗 ユーザー <@${userID}> の「${name}」のURLはこちら：\n${url}`,
+			content: `🔗 「${name}」のURLはこちら：\n${url}`,
 			ephemeral: false,
 		});
 	},

@@ -14,26 +14,28 @@ module.exports = {
 			option.setName('name')
 				.setDescription('保存されたサイト名を選んでください')
 				.setRequired(true)
-				.setAutocomplete(true) // ← ここがポイント
+				.setAutocomplete(true) // 👈 補完対応
 		),
 
+	// 🔽 autocomplete（選択したユーザーの保存済みURL名を表示）
 	async autocomplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
 		const targetUser = interaction.options.getUser('target') ?? interaction.user;
 		const userID = targetUser.id;
 
 		const allUrls = urlStorage.getAllUrls(userID);
-		const choices = Object.keys(allUrls);
+		const allNames = Object.keys(allUrls);
 
-		const filtered = choices.filter(choice =>
-			choice.toLowerCase().includes(focusedValue.toLowerCase())
+		const filtered = allNames.filter(name =>
+			name.toLowerCase().includes(focusedValue.toLowerCase())
 		);
 
 		await interaction.respond(
-			filtered.map(choice => ({ name: choice, value: choice })).slice(0, 25)
+			filtered.map(name => ({ name, value: name })).slice(0, 25)
 		);
 	},
 
+	// 🔽 実行処理（選んだ名前のURLを表示）
 	async execute(client, interaction) {
 		const targetUser = interaction.options.getUser('target');
 		const name = interaction.options.getString('name');

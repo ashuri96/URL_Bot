@@ -1,0 +1,22 @@
+// commands/geturl.js
+const { SlashCommandBuilder } = require('discord.js');
+const urlStorage = require('../urlStorage');
+
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('geturl')
+		.setDescription('保存されたURLを取得します')
+		.addStringOption(option =>
+			option.setName('name').setDescription('取得するURLの名前').setRequired(true)),
+
+	async execute(client, interaction) {
+		const name = interaction.options.getString('name');
+
+		if (urlStorage.hasUrl(name)) {
+			const url = urlStorage.getUrl(name);
+			await interaction.reply(`🔗 名前「${name}」のURLはこちら：\n${url}`);
+		} else {
+			await interaction.reply(`⚠️ 名前「${name}」のURLは保存されていません。`);
+		}
+	},
+};

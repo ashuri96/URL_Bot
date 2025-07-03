@@ -1,0 +1,21 @@
+// commands/seturl.js
+const { SlashCommandBuilder } = require('discord.js');
+const urlStorage = require('../urlStorage');
+
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('seturl')
+		.setDescription('名前を指定してURLを保存します')
+		.addStringOption(option =>
+			option.setName('name').setDescription('URLに付ける名前').setRequired(true))
+		.addStringOption(option =>
+			option.setName('url').setDescription('保存するURL').setRequired(true)),
+
+	async execute(client, interaction) {
+		const name = interaction.options.getString('name');
+		const url = interaction.options.getString('url');
+
+		urlStorage.setUrl(name, url);
+		await interaction.reply(`✅ 名前「${name}」でURLを保存しました！`);
+	},
+};

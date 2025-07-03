@@ -9,7 +9,7 @@ module.exports = {
 			option.setName('name')
 				.setDescription('保存するURLに付ける名前（新規 or 既存）')
 				.setRequired(true)
-				.setAutocomplete(true) // 👈 追加：補完対応
+				.setAutocomplete(true)
 		)
 		.addStringOption(option =>
 			option.setName('url')
@@ -17,7 +17,6 @@ module.exports = {
 				.setRequired(true)
 		),
 
-	// 🔽 autocomplete の追加
 	async autocomplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
 		const userID = interaction.user.id;

@@ -12,7 +12,6 @@ module.exports = {
 				.setAutocomplete(true)
 		),
 
-	// 🔽 自分の保存した名前を候補表示
 	async autocomplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
 		const userID = interaction.user.id;
@@ -29,7 +28,6 @@ module.exports = {
 		);
 	},
 
-	// 🔽 選んだ名前に対応するURLを表示
 	async execute(client, interaction) {
 		const name = interaction.options.getString('name');
 		const userID = interaction.user.id;
